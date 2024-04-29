@@ -1,0 +1,35 @@
+{
+  "name": "@iampierrot/bankapi",
+  "version": "0.0.1",
+  "description": "call api from casso",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IamPierrot/sytem-stat.git"
+  },
+  "author": "IamPierrot",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IamPierrot/bank-api/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/IamPierrot/bank-api/#README",
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "axios": "^1.6.8"
+  }
+}
