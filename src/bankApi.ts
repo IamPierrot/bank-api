@@ -1,21 +1,21 @@
 import axios, { AxiosHeaders } from 'axios';
 
-export interface TransactionResponse {
+export interface ResponseTransaction {
     error: number;
     message: string;
-    data: Data;
+    data: DataTransaction;
 }
 
-interface Data {
+export interface DataTransaction {
     page: number;
     pageSize: number;
     nextPage: number;
     prevPage: number;
     totalPages: number;
     totalRecords: number;
-    records: TransactionRecord[];
+    records: RecordTransaction[];
 }
-interface TransactionRecord {
+export interface RecordTransaction {
     id: number;
     tid: string;
     description: string;
@@ -40,7 +40,7 @@ interface ApiOption {
     /**
      * @property a regex or string to filter transaction description (giao dịch)
      */
-    filterTransaction?: RegExp | string
+    filterTransaction?: (RegExp | string)[]
     hideBankId?: boolean
     /**
      * @property Date() constuctor expxress the date to filter transaction
@@ -53,8 +53,13 @@ interface ApiOption {
     dateFrom?: Date
 }
 
-const TRANSACTIONS_URL = 'https://oauth.casso.vn/v2/transactions';
+type Filter = RegExp | string | (RegExp | string)[];
 
+const TRANSACTIONS_URL = 'https://oauth.casso.vn/v2/transactions';
+/**
+ * A root class for calling api from casso.
+ *
+ */
 export class BankApi {
     private apiOption: ApiOption;
     private header: AxiosHeaders = new AxiosHeaders();
@@ -69,36 +74,61 @@ export class BankApi {
 
         this.header.set('Authorization', apiKey.startsWith('Apikey') ? apiKey : `Apikey ${apiKey}`);
         this.header.set('Content-Type', 'application/json');
+
+        this.CheckToken().then((value) => {
+            if (value) throw new Error("Unauthorized or Invalid token");
+        });
+
     }
 
-    public async getTransaction() {
+    private async CheckToken() {
+        const value = await (this.getAllTransactions());
+        return value.error != 0;
+    }
+
+    private async getAllTransactions() {
         const response = await axios.get(this.resolveTransactionUrl(), {
             headers: this.header,
         });
-        const responseData = response.data as TransactionResponse;
+        const responseData = response.data as ResponseTransaction;
 
-        if (!responseData) return null;
-
-        const convertedResponse: TransactionResponse = {
+        const convertedResponse: ResponseTransaction = {
             error: responseData.error,
             message: responseData.message,
             data: responseData.data
         };
 
+        return convertedResponse;
+    }
+
+    /**
+     * 
+     * @returns default response is all of transactions in months.
+     */
+    public async getTransaction() {
+        const transactions = await this.getAllTransactions();
+
         if (this.apiOption.filterTransaction) {
-            convertedResponse.data.records = convertedResponse.data.records.filter((value) => {
-                return value.description.match(this.apiOption.filterTransaction!)
+            transactions.data.records = transactions.data.records.filter((value) => {
+                const result: RecordTransaction[] = []
+
+                for (const filter of this.apiOption.filterTransaction!) {
+                    if (value.description.match(filter)) result.push(value);
+                }
+
+                return result;
             });
         }
-        
+
         if (this.apiOption.hideBankId) {
-            convertedResponse.data.records = convertedResponse.data.records.map((value) => {
+            transactions.data.records = transactions.data.records.map((value) => {
                 value.accountId = 0;
                 value.bankCodeName = "*****";
                 return value;
             })
         }
-        return convertedResponse;
+
+        return transactions;
     }
 
     private resolveTransactionUrl(): string {
@@ -111,8 +141,21 @@ export class BankApi {
 
         return result.join("");
     }
+    /**
+     * A function to add filter to option.
+     * @param filterOrFilters an array or a filter for query transaction.
+     */
+    public addFilter(filterOrFilters: Filter): void {
+        if (!this.apiOption.filterTransaction) {
+            this.apiOption.filterTransaction = [];
+        }
 
-    public setOption(option: ApiOption) {
-        this.apiOption = option;
+        if (filterOrFilters instanceof Array) {
+            for (const filter of filterOrFilters) {
+                this.apiOption.filterTransaction.push(filter);
+            }
+        } else {
+            this.apiOption.filterTransaction.push(filterOrFilters);
+        }
     }
 }

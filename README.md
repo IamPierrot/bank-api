@@ -2,6 +2,15 @@
 
 **Bank API** supports those who use [Casso API](https://casso.vn/) in order to interact with bank account in faster and easier way.
 
+## Table of Contents
+
+1. [Requirement](#⚙️-requirement)
+2. [Installation](#💾-installation)
+3. [Getting started](#🔨-quick-start)
+4. [Documentation](#📖-documentation)
+5. [Contacts](#💁‍♂️-contacts)
+6. [Issue](#support-by-creating-issue)
+
 ## ⚙️ Requirement
 This api may target commonJs/ES app. You have to create an account on [Casso](https://casso.vn/) and link your bank account to its application.
 
@@ -14,8 +23,7 @@ This api may target commonJs/ES app. You have to create an account on [Casso](ht
     npm install @iampierrot/bankapi
 ```
 
-
-## 🔨 How to use Package
+## 🔨 Quick Start
 
 ### CommonJs
 
@@ -51,7 +59,7 @@ async function main() {
     console.log(transaction);
 }
 ```
-> [!NOTE]  
+> [!NOTE]
 > Module and ES have the same syntax.
 
 ## 📖 Documentation
@@ -62,10 +70,7 @@ Docs will be updated in near future.
 ## 💁‍♂️ Contacts
 If you have any questions about package or something else, feel free to <a href="mailto:phatnguyentan836@gmail.com">contact me through email</a>.
 
-
-
 ## Contributing
-
 
 Bank API is developed in the open on Github, and I am welcome to the community for contributing bugfixes and innovations in near future.
 

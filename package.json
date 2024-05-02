@@ -1,6 +1,6 @@
 {
   "name": "@iampierrot/bankapi",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "call api from casso",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -16,7 +16,7 @@
     "url": "git+https://github.com/IamPierrot/bank-api.git"
   },
   "author": "IamPierrot",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/IamPierrot/bank-api/issues"
   },
