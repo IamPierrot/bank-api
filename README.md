@@ -37,7 +37,7 @@ async function main() {
      */
     const bankClient = new BankApi("Your api key here");
 
-    const transaction = bankClient.getTransaction();
+    const transaction = await bankClient.getTransaction();
 
     console.log(transaction);
 }
@@ -54,7 +54,7 @@ async function main() {
      */
     const bankClient = new BankApi("Your api key here");
 
-    const transaction = bankClient.getTransaction();
+    const transaction = await bankClient.getTransaction();
 
     console.log(transaction);
 }
